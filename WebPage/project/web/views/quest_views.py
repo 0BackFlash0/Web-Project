@@ -1,8 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session, g
-from ..db import WebProject
+from ..db import WebProject, exp_manager
+from markupsafe import Markup
+import json
 
 bp = Blueprint('quest', __name__, url_prefix='/quest')
 wp = WebProject.instance()
+em = exp_manager.instance()
 
 @bp.route('/')
 def quest_list():
@@ -20,8 +23,35 @@ def quest_list():
 @bp.route('/<int:problem_id>', methods=['GET', 'POST'])
 def problem_show(problem_id):
     if(request.method == "POST"):
-        pass
-    
+        send = {}
+        if(em.can_exp(g.user["user_id"], "quest_solve")):
+            send["can_exp"] = True
+            params = request.get_json()
+
+            result = wp.send_query("SELECT CASE WHEN answer = '{}' THEN TRUE ELSE FALSE END AS success FROM {} WHERE id = {}".format(params["answer"], params["type"], params["problem_id"]))
+
+            is_exist = wp.send_query("SELECT EXISTS (SELECT * FROM solving WHERE user_id = '{}' AND problem_id = {}) as success".format(g.user["user_id"], params["problem_id"]))
+
+            if(is_exist[0]["success"]):
+                wp.send_query("UPDATE solving SET solved = {} WHERE user_id = '{}' AND problem_id = {}".format(result[0]["success"], g.user["user_id"], params["problem_id"]), commit=True)
+            else:
+                wp.send_query("INSERT INTO solving(solved, user_id, problem_id) VALUES ('{}', '{}', {})".format(result[0]["success"], g.user["user_id"], params["problem_id"]), commit=True)
+            
+            send["success"] = result[0]["success"]
+            if(send["success"]):
+                send["exp"] = em.exp_dict["quest_solve"]
+                em.gain_exp(g.user["user_id"], "quest_solve")
+            else:
+                send["exp"] = 0
+
+        else:
+            send["can_exp"] = False
+            send["success"] = 0
+            send["exp"] = 0
+        
+        return json.dumps(send)
+
+            
     problem_data = {}
 
     problem_data["status"] = wp.send_query("""
@@ -36,5 +66,18 @@ def problem_show(problem_id):
         sql = "SELECT problem.*, subjective.answer FROM problem INNER JOIN subjective ON problem.id = subjective.id WHERE problem.id = {}".format(problem_id)
     
     problem_data["problem"] = wp.send_query(sql)[0]
+
+    print(problem_data["problem"])
+
+    for key, val in problem_data["problem"].items():
+        if(type(val)==str):
+            val = val.replace("\'\'", "\'")
+            val = val.replace("\"\"", "\"")
+            problem_data["problem"][key] = val
+            
+    # problem_data["problem"]["content"] = problem_data["problem"]["content"].replace("\n", "<br>")
+    # problem_data["problem"]["explanation"] = problem_data["problem"]["explanation"].replace("\n", "<br>")
+
+    print(problem_data["problem"])
 
     return render_template("main/quest_show.html", problem_data=problem_data)
