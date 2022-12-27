@@ -22,11 +22,7 @@ class SingletonInstance:
 class WebProject(SingletonInstance):
 
     def connect(self):
-<<<<<<< HEAD
         self.db = connect(host='localhost', user='root', password = 'qhdkscjfwj0!', database='ProjectTest', cursorclass=cursors.DictCursor)
-=======
-        self.db = connect(host='localhost', user='root', password = 'rjsdud', database='ProjectTest', cursorclass=cursors.DictCursor)
->>>>>>> main
 
     def close(self):
         self.db.close()
