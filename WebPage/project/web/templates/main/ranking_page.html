@@ -2,7 +2,7 @@
 {% block content %}
 <script> document.querySelector(".ranking_link").classList.add("selected") </script>
 
-
+<script defer src="{{ url_for('static', filename='leaderboard/question.js') }}"></script>
 <link text="text/css" rel="stylesheet" href="{{ url_for('static', filename='./leaderboard/leaderboard.css') }}">
 
 <!--<script type='text/javascript'>
@@ -63,7 +63,7 @@
     <!--동그라미 움직이기
         <div class ="center" id = 'dung'>
         <a href="?page={{ user_rank['mypage']}}" class = "texted">내 순위</a>
-    </div>-->
+    </div>--> 
 
     <!--마우스로 움직이기
         <div style='position:absolute; left:0px; top:0px; cursor:pointer; cursor:hand' onmousedown='startDrag(event, this)'>
@@ -71,23 +71,26 @@
         <a href="?page={{ user_rank['mypage']}}" class = "texted">내 순위</a>
         </div>
     </div>-->
+    {% for message in get_flashed_messages() %}
+        <script>alert("{{message}}")</script>
+    {% endfor %}
+
+
     <header class = "displays">
-            <div class = "headers"> 
-                <div class ="center" id = 'dung'>
-                    <a href="?page={{ user_rank['mypage']}}" class = "texted">내 순위</a>
-                </div>
-            </div>
-            <div class="headers2">
-                <div class ="headers3">
-                    <img src="{{url_for('static',filename='./leaderboard/leaderboard_ui/leaderboard.gif')}}" class = 'wo'>
-                    <div class = "displays headsize">
-                        <span class="username">GOGOGO!</span>
-                        <div class = "size1">
-                            <input class="questionbox imgquetion" placeholder="내 별명이요">                            
-                        </div>
+        <div class ="center" id = 'dung'>
+            <a href="?page={{ user_rank['mypage']}}" class = "texted">내 순위</a>
+        </div>
+        <div class="headers2">
+            <div class ="headers3">
+                <img src="{{url_for('static',filename='./leaderboard/leaderboard_ui/leaderboard.gif')}}" class = 'wo'>
+                <div class = "displays headsize">
+                    <span class="username">GOGOGO!</span>
+                    <div class = "size1">
+                        <input class="questionbox imgquetion" id = 'question' placeholder="내 별명이요">                            
                     </div>
                 </div>
             </div>
+        </div>
     </header>
     <section class = "displays">
 
@@ -102,9 +105,13 @@
         <!-- lanking 표시 ,-->
         <div class="board2 displays">
             {%for item in user_rank['item']%}
-            
-                <div class="leaders test_obj">
-                    
+                {%if loop.index % 2==1 %}
+                <div class="leaders1 test_obj coloror">
+                {%else%}
+                <div class="leaders2 test_obj coloror2">
+                {%endif%}
+
+
                     {% if user_rank['page'] == 1 %}
 
                         {% if loop.index <4 %}
@@ -147,6 +154,8 @@
         </div>
 
     </section>
+
+
 
     <script> 
         {% if user_rank['myinfo'] < 4 %}

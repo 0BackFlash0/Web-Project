@@ -25,14 +25,15 @@ header{
 main{
     position: relative;
     width: 100%;
-    height: 300px;
+    height: calc(100% - 60px);
 
     display: flex;
     flex-direction: column;
 }
 
 .back {
-    height: 100%;
+    height: 45%;
+    min-height: 300px;
 
     padding: 10px;
 
@@ -126,10 +127,11 @@ progress.character_detail {
 
 .character_show{
     width: 100%;
+    padding: 0 20px;
 
     display: flex;
     align-items: flex-end;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .char{
@@ -175,10 +177,20 @@ footer{
     width: 100%;
     height: 160px;
 }
+
 .todo{
-    margin: 20px;
+    margin: 15px;
+
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+
+    overflow-y: auto;
+}
+
+.todo > h2{
+    margin:0 0 5px 0;
 }
 
 #progress {
@@ -203,7 +215,7 @@ footer{
     display: flex;
     vertical-align: middle;
 
-    height: 50px;
+    height: 40px;
     width: 100%;
 
     border: 0.5px solid gray;
@@ -211,18 +223,46 @@ footer{
     padding: 0;
 }
 
-.complete_button, .modify_button{
-    background: white;
+.modify_button{
+    margin: 5px;
+
+    background: greenyellow;
+
+    border: solid 1px;
+    border-radius: 10%;
+}
+
+.modify_button:hover{
+    background-color: rgb(68, 255, 47);
+}
+
+.complete_button{
+    width:28px;
+    height:28px;
+
+    margin:6px;
+
+    background-image: url("../static/ui/check.png");
+    background-size: contain;
+    background-color: white;
 
     border-style: none;
 }
 
-.modify_button:hover{
-    background-color: greenyellow;
+.complete_button:hover:not(.complete){
+    transform: scale(1.1);
+}
+
+.complete_button.complete{
+    background-image: url("../static/ui/complete.png");
 }
 
 .todo_show{
     flex-grow: 1;
+    margin: 0;
+    display: flex;
+
+    align-items: center;
 }
 
 .todo_input{
@@ -231,4 +271,68 @@ footer{
 
 .deactivate{
     display: none;
+}
+
+.error-modal{
+    display: none;
+    z-index: -1;
+    opacity: 0;
+
+    position: absolute;
+    right: 50%;
+    bottom:0;
+    transform: translate(50%, 0);
+
+    transition: bottom 0.5s, opacity 0.5s, transform 0.5s;
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
+}
+
+.error-modal.show{
+    display: block;
+    transform: translate(50%, 50%);
+    z-index: 1;
+    bottom: 50%;
+    opacity: 1;
+}
+
+.error-modal-top-content{
+    width: 100%;
+    padding: 10px 15px;
+
+    text-align: center;
+    font-size: 18px;
+    color: black;
+    font-weight: 500;
+    user-select: none;
+}
+
+.error-modal-bottom-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width:100%;
+
+    padding: 0 20px;
+
+    background: white;
+}
+
+.error-modal-modal_close{
+    display:block;
+
+    padding: 9px 13px;
+    background: #27ae60;
+
+    border: none;
+    outline: none;
+    font-size: 18px;
+
+    text-transform: uppercase;
+    border-radius: 3px;
+
+    color: #f2f2f2;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
 }
