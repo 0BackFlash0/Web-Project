@@ -1,47 +1,113 @@
 var todo_list;
 
-async function store_todo(is_complete, content, order){
+async function store_todo(is_complete, content, nth){
+    console.log(content)
     let result = await fetch(".", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            "func": "store",
             "is_complete": is_complete,
             "content": content,
-            "order": order
+            "nth": nth
         }),
         }).then((response) => response.json());
+
+    if(result["exp"]!=0){
+        get_exp(result["exp"])
+    }
     
     return result
 }
 
-function make_todo(){
-    let li = document.createElement("li")
+async function get_todo(date){
+    let result = await fetch(window.location.href, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            "func": "get",
+            "date" : date
+        }),
+        }).then((response) => response.json());
+        
 
-    let p = document.createElement("p")
-    p.classList.add("todo_show")
+    return result
+}
 
-    let button1 = document.createElement("button")
-    button1.classList.add("modify_button")
-    button1.appendChild(document.createTextNode("입력"))
-    button1.addEventListener('click', ({target}) => {
-        label_to_input(target)
-    })
+async function make_todos(date = new Date()){
 
-    let button2 = document.createElement("button")
-    button2.classList.add("complete_button", "deactivate")
-   
-    let img = document.createElement("img")
-    img.setAttribute("src", "../static/ui/check.png")
-    
-    button2.appendChild(img)
+    let year = date.getFullYear()
+    let month = date.getMonth()+1
+    let days = date.getDate()
 
-    li.appendChild(button2)
-    li.appendChild(p)
-    li.appendChild(button1)
+    let formated_date = `${year}-${month >= 10 ? month : '0' + month}-${date >= 10 ? days : '0' + days}`
 
-    return li
+    let todos = await get_todo(formated_date)
+    console.log(todos)
+
+    let ul = document.createElement("ul")
+    ul.classList.add("todo-list")
+
+    for(let i = 0; i < 5; i++){
+        let li = document.createElement("li")
+        li.dataset.nth = i;
+
+        let p = document.createElement("p")
+        p.classList.add("todo_show")
+
+        let button1 = document.createElement("button")
+        button1.classList.add("modify_button")
+
+        let button2 = document.createElement("button")
+        button2.classList.add("complete_button")
+        button2.addEventListener('click', async function(){
+            let response = await store_todo(1, button2.parentNode.querySelector("p").innerText, i)
+            
+            p.classList.add("complete")
+
+            button1.classList.add("deactivate")
+            button2.classList.add("complete")
+            button2.disabled = true;
+        })
+
+        if(todos[i]["is_complete"]==-1){
+            button1.appendChild(document.createTextNode("입력"))
+            button1.addEventListener('click', ({target}) => {
+                label_to_input(target)
+            }, {once: true})
+
+            button2.classList.add("deactivate")
+        }
+
+        else if(todos[i]["is_complete"]==0){
+            p.appendChild(document.createTextNode(todos[i]["content"]))
+
+            button1.appendChild(document.createTextNode("수정"))
+            button1.addEventListener('click', ({target}) => {
+                label_to_input(target)
+            }, {once: true})
+        }
+        else{
+            p.appendChild(document.createTextNode(todos[i]["content"]))
+            p.classList.add("complete")
+
+            button1.classList.add("deactivate")
+            button2.classList.add("complete")
+            button2.disabled = true;
+        }
+
+        li.appendChild(button2)
+        li.appendChild(p)
+        li.appendChild(button1)
+
+        ul.appendChild(li)
+    }
+
+    document.querySelector(".todo").appendChild(ul)
 }
 
 function label_to_input(target){
@@ -56,7 +122,7 @@ function label_to_input(target){
 
     target.addEventListener('click', ({target})=>{
         input_to_label(target)
-    })
+    }, {once:true})
 
     target.innerText = "저장"
 
@@ -69,20 +135,31 @@ function label_to_input(target){
     label.remove()
 }
 
-function input_to_label(target){
+async function input_to_label(target){
     text_input = target.parentNode.querySelector("input")
+    console.log(text_input.value)
 
-    if(text_input.value != ""){
+
+    if(text_input.value.length > 30){
+        todo_error()
+        target.addEventListener('click', ({target})=>{
+            input_to_label(target)
+        }, {once:true})
+    }
+    else if(text_input.value != ""){
         prev = text_input.nextSibling
     
         let label = document.createElement("p")
         label.classList.add("todo_show")
         label.innerText = text_input.value
-        target.addEventListener('click', ({target}) => {label_to_input(target)})
+        target.addEventListener('click', ({target}) => {label_to_input(target)}, {once: true})
     
         target.innerText = "수정"
-        store_todo(0, text_input.value, target.parentNode.dataset.nth)
-    
+        let response = await store_todo(0, text_input.value, target.parentNode.dataset.nth)
+        if(response["exp"]!=0){
+            get_exp(response["exp"])
+        }
+
         complete_button = target.parentNode.querySelector(".complete_button")
         if(complete_button.classList.contains("deactivate")){
             complete_button.classList.toggle("deactivate")
@@ -91,29 +168,20 @@ function input_to_label(target){
         prev.parentNode.insertBefore(label, prev)
         text_input.remove()
     }
-    else{
-        prev = text_input.nextSibling
-    
-        let label = document.createElement("p")
-        label.classList.add("todo_show")
-        label.innerText = text_input.value
-        target.addEventListener('click', ({target}) => {label_to_input(target)})
-    
-        target.innerText = "입력"
+}
 
-        prev.parentNode.insertBefore(label, prev)
-        text_input.remove()
-    }
+function todo_error(){
+    document.querySelector(".error-modal").classList.add("show")
 }
 
 window.onload = function assign_event(){
-    todo_list = document.getElementsByClassName("todo-list")[0]
+    todo = document.getElementsByClassName("todo")[0]
 
-    for(let i = 0; i < 5; i++){
-        let li = make_todo();
-        li.dataset.nth = i;
-        todo_list.appendChild(li)
-    }
+    make_todos()
 
     check_lvup()
+
+    document.querySelector(".error-modal-modal_close").addEventListener('click', () => {
+        document.querySelector(".error-modal").classList.remove("show")
+    })
 }

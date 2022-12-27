@@ -70,9 +70,9 @@ def terms():
     return render_template('login/terms.html', terms = term_dict)
 
 # 별명 회원가입 찾기
-@bp.route('/find', methods=['GET', 'POST'])
+@bp.route('/find', methods=['GET'])
 def finder():
-    return '알아서 찾으세요!'
+    return render_template('login/find_id.html')
 
 # 로그아웃
 @bp.route('/logout/')
@@ -85,6 +85,9 @@ def logout():
 @bp.route('/withdraw/')
 def withdraw():
     wp.send_query("DELETE from user where id='{}'".format(g.user['user_id']),commit=True)
+    wp.send_query("DELETE from daily where user_id='{}'".format(g.user['user_id']),commit=True)
+    wp.send_query("DELETE from solving where user_id='{}'".format(g.user['user_id']),commit=True)
+    wp.send_query("DELETE from todo where user_id='{}'".format(g.user['user_id']),commit=True)
     return redirect(url_for("login.login_page"))
 
 

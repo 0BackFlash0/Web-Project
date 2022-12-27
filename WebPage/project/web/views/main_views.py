@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, session, g, request
+from flask import Blueprint, render_template, redirect, url_for, session, g, request,jsonify, flash
 from ..db import WebProject, exp_manager
 from datetime import date
 import json
+import random
 
 bp = Blueprint('main', __name__, url_prefix='/')
 wp = WebProject.instance()
@@ -11,9 +12,48 @@ em = exp_manager.instance()
 def main_page():
     if(request.method=="POST"):
         params = request.get_json()
+        if(params["func"]=="store"):
+            today = date.today().isoformat()
+            act = "todo_complete" if params["is_complete"] else "todo_write"
+
+            send = {"can_exp" : False, "exp" : 0}
+
+            is_exists = wp.send_query("SELECT EXISTS (SELECT * FROM todo WHERE user_id = '{}' AND nth = {} AND date = '{}') AS success".format(g.user["user_id"], params["nth"], today))
+            print(act)
+            if(is_exists[0]["success"]):
+                wp.send_query("UPDATE todo SET content='{}', is_complete={} WHERE user_id = '{}' AND nth = {} and date = '{}'".format(params["content"], params["is_complete"], g.user["user_id"], params["nth"], today), commit=True)
+                if(act=="todo_complete"):
+                    print("성공 exp 얻기")
+                    send["can_exp"] = em.gain_exp(g.user["user_id"], act)
+                    if(send["can_exp"]):
+                        send["exp"] = em.exp_dict[act]
+            else:
+                wp.send_query("INSERT INTO todo(user_id, is_complete, content, nth, date) VALUES ('{}', {}, '{}', {}, '{}')".format(g.user["user_id"], params["is_complete"], params["content"], params["nth"], today), commit=True)
+                if(act=="todo_write"):
+                    print("작성 exp 얻기")
+                    send["can_exp"] = em.gain_exp(g.user["user_id"], act)
+                    if(send["can_exp"]):
+                        send["exp"] = em.exp_dict[act]
+
         
         
-        return 
+        elif(params["func"]=="get"):
+            send = wp.send_query("""WITH test AS
+                (
+                    SELECT 0 AS nth
+                    UNION ALL
+                    SELECT 1 AS nth
+                    UNION ALL
+                    SELECT 2 AS nth
+                    UNION ALL
+                    SELECT 3 AS nth
+                    UNION ALL
+                    SELECT 4 AS nth
+                )
+                SELECT test.nth, IFNULL(todo.is_complete, -1) AS is_complete , IFNULL(todo.content, "") AS content FROM test LEFT JOIN todo ON test.nth = todo.nth AND todo.user_id = '{}' AND todo.date = '{}' ORDER BY nth;
+                """.format(g.user["user_id"], params["date"]))
+        
+        return json.dumps(send)
     
 
     log = session.get('logged_in')
@@ -26,6 +66,8 @@ def main_page():
         main_data["lv"] = result[0]["user_Lv"]
         main_data["exp"] = result[0]["user_Exp"]
 
+        main_data["imgview"] = random.randrange(1,3)
+
         main_data["max_exp"] = em.lvup_dict[main_data["lv"]]
 
         today = date.today().isoformat()
@@ -37,7 +79,7 @@ def main_page():
         return redirect(url_for("login.login_page"))
 
         
-@bp.route('/ranking')
+@bp.route('/ranking', methods=['GET', 'POST'])
 def ranking_page():
     rank_dict = {}
     number = 10
@@ -46,9 +88,9 @@ def ranking_page():
     first_number = (page-1) *number
     last_number =  (page*number)
     ranking = wp.send_query("SELECT id, user_Lv, user_Exp FROM user ORDER BY user_Lv DESC,user_Exp DESC")
-
-    max_page = (len(ranking) - 1) // number + 1
     
+    max_page = (len(ranking) - 1) // number + 1
+
     item = ranking[first_number:last_number]
     
     rank_dict['item'] = item
@@ -58,5 +100,21 @@ def ranking_page():
         if g.user['user_id'] == i['id']:
             rank_dict['myinfo'] = j+1
             rank_dict['mypage'] = int((j //10) +1)
-                 
+    
+    if request.method == 'POST':
+        params = request.get_json()
+
+        for ret1,ret2 in enumerate(ranking):
+            te = True
+            if params['value'] == ret2['id']:
+                te = False
+                user_page = int((ret1 //10) +1)
+                data = {'user_page': user_page}
+                return jsonify(data)
+        if te:
+            flash('다시하세요')
+
+            return redirect(url_for('main.ranking_page'))
+            
+
     return render_template('main/ranking_page.html',user_rank = rank_dict)

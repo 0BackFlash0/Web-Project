@@ -2,39 +2,35 @@
 {% block content %}
 <link text="text/css" rel="stylesheet" href="{{ url_for('static', filename='./myinfo/myinfo_notice.css') }}">
 <body>
-    <header>
-        <div class = "headers"></div>
-        <!-- 관리자 일 때만 등록 나오게
-         관리자는 0,1 로 판단 할 까?-->
-        <div class="head">
-            <div>공지사항</div>
-            {%if notice['admin'] == '새싹이2'%}
-                <a href="{{ url_for('myinfo.enroll') }}">등록</a>
-            {%endif%}
-        </div>
-        <div class="border"></div>
-    </header>
+    <div class="notice">
+        <div class="notice_top">            
 
-    <main class ='main'>
-        {%for i in notice['item']%}
-        <div class="content">
-            <div class="li">
-                <div class="datetime"> {{i['date']}}</div>
-                <a href="{{ url_for('myinfo.content', content_id = i['id'] ) }}" class="textcon" >{{i['title']}}</a>
-                <!-- 관리자 일 때만 등록 나오게
-                관리자는 0,1 로 판단 할 까?-->
-                {%if notice['admin'] == '새싹이2'%}
-                    <div class = "modify">
-                        <a class = "delete" href="javascript:void(0)" data-uri="{{ url_for('myinfo.delete', content_id=i['id']) }}">삭제</a>
-                        <!-- 어떻게 띄우지??-->
-                        <div></div>
-                        <a href="{{ url_for('myinfo.modify', content_id = i['id'] ) }}">수정</a>
-                    </div>
-                {%endif%}
-            </div>
+            <div class='notice_name'>공지사항
+            {%if notice['admin'] == 1%}
+                <a href="{{ url_for('myinfo.enroll') }}">등록</a>            
+            {%endif%}
+            </div>            
         </div>
-        {% endfor %}
-    </main>    
+
+        <div class="notice_contents">
+            {%for i in notice['item']%}
+            <div class="notice_content">
+                <div class="notice_datetime"> {{i['date']}}</div>
+                <div class="notice_sub">
+                    <a href="{{ url_for('myinfo.content', content_id = i['id'] ) }}" class="textcon" >{{i['title']}}</a>
+                     
+                        {%if notice['admin'] == 1%}                        
+                        <div class="admin_modify">
+                            <a class = "delete" href="javascript:void(0)" data-uri="{{ url_for('myinfo.delete', content_id=i['id']) }}">삭제</a>                            
+                            <a href="{{ url_for('myinfo.modify', content_id = i['id'] ) }}">수정</a>                        
+                        </div>
+                        {%endif%}                        
+                </div>
+            </div>
+            {% endfor %}
+        </div> 
+    </div>    
+
 
 
 
