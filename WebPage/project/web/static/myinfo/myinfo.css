@@ -1,0 +1,388 @@
+*{
+    font-family: 'EF_Diary';
+}
+
+body{
+    margin: 0;
+    position: relative;
+
+    max-width: 500px;
+    min-width: 300px;
+    width:100vw;
+
+    max-height: 1000px;
+    height: 100vh;
+}
+
+@font-face {
+    font-family: 'neon';
+    src: url('EF_Diary.ttf') format('truetype');
+}
+
+body *{
+    box-sizing: border-box;
+}
+
+.myinfo {
+    width: 100%;
+    height: calc(100% - 60px);
+    font-size: 14px;        
+}
+
+.myinfo_top {    
+    height: 30%;
+    background: rgba(113,188,102,1);
+    opacity: 1;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 40px;
+    
+}
+
+.myinfo_name {     
+    width: 90%;
+
+    padding-top: 10%;
+    
+    color: rgba(241,248,240,1);            
+        
+    font-size: 35px;
+    opacity: 1;  
+}
+
+.myinfo_modifybutton {    
+    width: auto;
+    height: auto;    
+    background: #E0E0E0;    
+    opacity: 1;    
+    
+    padding: 5px 10px;
+
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+
+    text-decoration: none;
+    color: black;    
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.myinfo_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.myinfo_content_set {    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+.myinfo_content_title {
+    height: 50%;
+    width: 90%;  
+    
+    opacity: 1;
+
+    padding: 10px;
+    
+    border-bottom: 3px solid black;
+    
+   
+    font-weight: Bold;
+    font-size: 18px;
+    color: black;    
+    text-align: left; 
+}
+.myinfo_content_sub {
+    height: 50%;
+    width: 85%;
+
+    padding: 10px;
+    
+    border-bottom: 1px solid #E0E0E0;
+    
+       
+    font-size: 14px;
+    color: black;    
+    text-align: left;    
+}
+
+.myinfo_content_set > a {
+    text-decoration: none;
+}
+
+.myinfo_logout {
+    width: 65%;
+    height: auto;
+    background: black;    
+    opacity: 1;    
+    
+    margin-top: 35px;
+    padding: 15px;
+
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    color: #F1F8F0;    
+    text-align: center;
+}
+
+.myinfopasscheck_top {    
+    height: 30%;
+    background: #f1f7f0;
+    opacity: 1;        
+
+    margin-bottom: 25px;
+
+    
+    text-align: center;
+}
+
+.myinfopasscheck_name {        
+    padding: 60px 15px 30px;    
+    font-size: 35px;
+}
+
+.myinfopasscheck_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.myinfopasscheck_content_set {    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+.myinfopasscheck_content_title {
+    height: 50%;
+    width: 85%;  
+    
+    opacity: 1;
+
+    padding: 10px;        
+    
+   
+    font-weight: Bold;
+    font-size: 16px;
+    color: black;    
+    text-align: left; 
+}
+.myinfopasscheck_content_sub {
+    height: 50%;
+    width: 85%;
+
+    padding: 10px;       
+    
+    font-size: 16px;
+    color: black;    
+    text-align: left;    
+}
+
+.myinfopasscheck_content_sub > input {
+    width: 100%;
+    padding: 7px 10px;
+
+    background-color: #D9D9D9;
+
+    border: 0px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+.myinfopasscheck_submit {
+    width: 65%;
+    height: auto;
+    background: #F1F8F0;    
+    opacity: 1;    
+    
+    margin-top: 35px;
+    padding: 15px;
+
+    border: #71bc66 solid 1px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+        
+    align-items: center;
+
+    margin-bottom: 20px;
+    
+    text-align: center;
+}
+
+.myinfomodify {
+    height: 100%;
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0.9),
+        rgba(255, 255, 255, 0.9)
+      ), url("myinfo_ui/myinfo_infinity.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.myinfomodify_top {    
+    height: 10%;    
+
+    margin-bottom: 25px;
+
+    border-bottom: 1px solid #E9E9E9;
+
+        
+}
+
+.myinfomodify_name {        
+    padding: 20px;    
+    font-size: 20px;
+}
+
+.myinfomodify_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.myinfomodify_content_fullset {
+    width: 100%;
+
+    margin-bottom: 20px;
+
+    display: flex;
+    flex-direction: column;    
+    align-items: center;
+}
+
+.myinfomodify_content_set {
+    width: 85%;
+    height: 50%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center; 
+}
+.myinfomodify_content_title {
+    height: 50%;
+    width: 85%;  
+    
+    opacity: 1;
+
+    padding: 10px;        
+    
+    font-weight: Bold;
+    font-size: 16px;
+    color: black;    
+    text-align: left; 
+}
+
+.myinfomodify_content_sub {
+    margin-right: 8%;
+    width: 65%;
+
+    padding: 10px;       
+    
+    font-size: 16px;
+    color: black;    
+    text-align: left;    
+}
+
+.myinfomodify_modifybutton {    
+    width: auto;
+    height: fit-content;    
+    background: #E0E0E0;    
+    opacity: 1;    
+    
+    padding: 5px 10px;
+
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+
+    text-decoration: none;
+    color: black;    
+    font-size: 12px;
+    overflow: hidden;    
+}
+
+
+.myinfomodify_content_sub > input {
+    width: 100%;
+    padding: 7px 10px;
+
+    background-color: #D9D9D9;
+
+    border: 0px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+
+    font-size: 16px;
+}
+
+.myinfomodify_submit {
+    width: auto;
+    height: fit-content;    
+    background: #E0E0E0;    
+    opacity: 1;    
+    
+    margin-right: 2px;
+    padding: 5px 10px;
+
+    border: 0px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+
+    text-decoration: none;
+    color: black;    
+    font-size: 12px;
+    overflow: hidden;  
+}
+
+.myinfomodify_withdraw {    
+    width: 85%;
+    margin-top: 80px;
+        
+    font-size: 12px;
+}
+.totback{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.back {
+    position:absolute;
+    background-image:url("myinfo_ui/backimg2.jpeg");
+    background-size:50% 25%;
+
+    opacity:0.5!important;
+    filter:alpha(opacity=50);
+    z-index:1;
+    background-repeat: no-repeat;
+    content:"";
+    width:100%;
+    height:100%;
+}
+

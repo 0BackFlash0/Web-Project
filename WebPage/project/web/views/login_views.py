@@ -59,11 +59,20 @@ def register_page():
             return redirect(url_for("login.login_page"))
     else:
         return render_template('login/register_page.html', form = form)
+# 이용 약관
+@bp.route('/terms', methods=['GET', 'POST'])
+def terms():
+    term_dict={}
+    terms1 = wp.send_query("SELECT * FROM notice_board where title ='{}'".format('이용약관'))
+    terms2 = wp.send_query("SELECT * FROM notice_board where title ='{}'".format('개인정보 취급방침'))
+    term_dict['ret1'] = terms1[0]
+    term_dict['ret2'] = terms2[0]
+    return render_template('login/terms.html', terms = term_dict)
 
 # 별명 회원가입 찾기
-@bp.route('/find', methods=['GET', 'POST'])
+@bp.route('/find', methods=['GET'])
 def finder():
-    return '알아서 찾으세요!'
+    return render_template('login/find_id.html')
 
 # 로그아웃
 @bp.route('/logout/')
@@ -72,13 +81,23 @@ def logout():
     session['logged_in'] = False
     return redirect(url_for("main.main_page"))
 
+# 탈퇴
+@bp.route('/withdraw/')
+def withdraw():
+    wp.send_query("DELETE from user where id='{}'".format(g.user['user_id']),commit=True)
+    wp.send_query("DELETE from daily where user_id='{}'".format(g.user['user_id']),commit=True)
+    wp.send_query("DELETE from solving where user_id='{}'".format(g.user['user_id']),commit=True)
+    wp.send_query("DELETE from todo where user_id='{}'".format(g.user['user_id']),commit=True)
+    return redirect(url_for("login.login_page"))
+
+
+
+# 실행 전
 @bp.before_app_request  
 def load_logged_in_user():
     log = session.get('logged_in')
     if log:
         g.user = {'user_id': session.get('id')}
-        print(g.user)
     else:
         g.user = None
 
-        

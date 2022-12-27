@@ -1,0 +1,25 @@
+{% block exp_modal %}
+<link text="text/css" rel="stylesheet" href="{{ url_for('static', filename='exp_modal.css') }}">
+<script defer src="{{ url_for('static', filename='exp_modal.js') }}"></script>
+
+<div class="exp-modal">
+    <div class="exp-content"></div>
+        <p><label class="obtained_exp">5</label>경험치 획득!</p>
+    </div>
+ </div>
+
+ <div class="level-modal">
+    <div class="level-top-content">
+        레벨 업!
+    </div>
+    <div class="level-bottom-content">
+        <div class="level-chr_box">
+            <img src="../static/ui/mk5.gif" class="level-modal_img">
+            <img src="../static/ui/levelup.gif" class="levelup_img">
+        </div>
+        <p>Lv.<label class="current_lv">5</label>로 레벨업 하셨습니다.</p>
+        <button class="level-modal_close">확인</button>
+    </div>
+ </div>
+
+{% endblock %}
