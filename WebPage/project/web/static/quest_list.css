@@ -1,22 +1,14 @@
-section{
-    padding-top: 60px;
-    height: calc(100% - 60px);
-}
-
 .main{
-    max-height: calc(100% - 60px);
+    max-height: 540px;
+
 
     overflow-x: scroll;
-}
-
-.main::-webkit-scrollbar{
-    display: none;
 }
 
 header{
     position: absolute;
     left:0px;
-    top:60px;
+    top:0px;
 
     width:100%;
 
@@ -167,6 +159,9 @@ header{
     background-color: rgb(232, 178, 255);
 }
 
+section{
+    margin-top:60px;
+}
 
 .problem_list{
     margin:0;

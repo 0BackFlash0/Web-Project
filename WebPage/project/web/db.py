@@ -4,7 +4,6 @@ import requests
 import re
 import os
 from datetime import date
-from threading import RLock
 
 
 class SingletonInstance:
@@ -22,18 +21,15 @@ class SingletonInstance:
 
 class WebProject(SingletonInstance):
 
-    def __init__(self):
-        self.LOCK = RLock()
-        self.db = connect(host='localhost', user='root', password = '1111', database='ProjectTest', cursorclass=cursors.DictCursor)
-        self.cursor = self.db.cursor()
-
     def connect(self):
 <<<<<<< HEAD
-        self.cursor = self.db.cursor()
+        self.db = connect(host='localhost', user='root', password = 'qhdkscjfwj0!', database='ProjectTest', cursorclass=cursors.DictCursor)
 =======
+        self.db = connect(host='localhost', user='root', password = 'rjsdud', database='ProjectTest', cursorclass=cursors.DictCursor)
+>>>>>>> main
 
     def close(self):
-        self.cursor.close()
+        self.db.close()
 
     def connect_sheet(self):
 
@@ -168,23 +164,21 @@ class WebProject(SingletonInstance):
 
         return img_list
 
+
     def send_query(self, sql, commit=False):
 
-        with self.LOCK:
-            if(not self.cursor.connection):
-                self.connect()
+        self.connect()
 
-            cursor = self.cursor
+        cursor = self.db.cursor()
 
-            cursor.execute(sql)
-            result = cursor.fetchall()
-            print(result)
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        print(result)
 
-            if(commit):
-                self.db.commit()
+        if(commit):
+            self.db.commit()
 
-            if(self.cursor.connection):
-                self.cursor.close()
+        self.close()
         
         return result
 

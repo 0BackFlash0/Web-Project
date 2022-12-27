@@ -1,35 +1,22 @@
 body{
-    margin: 0;
     position: relative;
 
-    max-width: 500px;
-    min-width: 300px;
-    width:100vw;
+    width:360px;
+    height:640px;
 
-    max-height: 1000px;
-    height: 100vh;
+    border: solid;
 }
 
 body *{
     box-sizing: border-box;
 }
 
-.upper-margin{
-    width: 100%;
-    height: 60px;
-    background-color: #71bc66;
-}
-
 nav{
-    z-index: 2;
-    position: fixed;
+    position: absolute;
     top:auto;
     bottom: 0;
 
-    max-width: 500px;
-    min-width: 300px;
-    width:100vw;
-    
+    width: 100%;
     height: 50px;
 }
 

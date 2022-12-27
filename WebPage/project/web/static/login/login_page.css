@@ -1,44 +1,21 @@
-body{
-    margin: 0;
-    position: relative;
-
-    max-width: 500px;
-    min-width: 300px;
-    width:100vw;
-
-    max-height: 1000px;
-    height: 100vh;
-
-    font-size: 14pt;
-}
-
 body *{
     box-sizing: border-box;
 }
-
-
+body {
+    font-size: 14px;
+    position: relative;
+    width:360px;
+    height:640px;
+    border: solid;
+}
 .divbody {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    height: 100%;
+    width:360px;
+    height:640px;
     background: #99CD89;
 }
 
-@font-face {
-    font-family: 'neon';
-    src: url('EF_Diary.ttf') format('truetype');
-}
 
-.title{
-    text-align: center;
-    font-family: 'EF_Diary';
-    margin-top: 40px;
-    font-size: 35px;
-}
-.fonts{
-    font-family: 'EF_Diary';
-}
+
 .divone {
     display: flex;
     flex-direction: column;
@@ -47,7 +24,7 @@ body *{
 }
 
 .inputbox {
-    width: 80%;
+    width: 298.8px;
     height: 27px;
     background: rgba(217, 217, 217, 1);
     border-top-left-radius: 7px;
@@ -90,7 +67,7 @@ body *{
 
 .char {
     width: 230px;
-    margin-bottom: 15px;
+    margin-top:75px;
 }
 
 .displaycenter{
@@ -101,6 +78,7 @@ body *{
 .display{
     display: flex;
     flex-direction: column;
+    margin-top:10px;
 }
 .textmargin{
     font-size: 16px;
@@ -119,10 +97,8 @@ body *{
 }
 
 .divdisplay{
-    width: 100%;
     display:flex;
     flex-direction: column;
-    align-items: center;
 }
 .validate{
     margin-top: 8px;
